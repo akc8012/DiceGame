@@ -9,10 +9,12 @@ public class ConnectUI : MonoBehaviour
 {
 	//GameLogic gameLogic;
 
-	public InputField hostInput;
-	public InputField portInput;
-	public InputField nameInput;
-	public Button button;
+	[SerializeField] InputField hostInput;
+	[SerializeField] InputField portInput;
+	[SerializeField] InputField nameInput;
+	[SerializeField] Button button;
+
+	public string username { get { return nameInput.text; } }
 
 	public void Awake()
 	{
@@ -28,14 +30,11 @@ public class ConnectUI : MonoBehaviour
 
 	public void OnButtonClick()
 	{
-		Connection.instance.Connect();
+		Connection.instance.Connect(hostInput.text, portInput.text, nameInput.text);
 	}
 
-	public void OnMathButtonClick()
+	public void SetButtonInteractable(bool enable)
 	{
-		/*if (n1Input.text != "" && n2Input.text != "")
-			gameLogic.SendNumbersToServer(Convert.ToInt32(n1Input.text), Convert.ToInt32(n2Input.text));
-		else
-			print("some fields blank");*/
+		button.interactable = enable;
 	}
 }

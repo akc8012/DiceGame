@@ -28,6 +28,7 @@ public class Connection : MonoBehaviour
 
 	SmartFox sfs;
 	public SmartFox Sfs { get { return sfs; } }
+	public bool SfsReady { get { return sfs != null; } }
 	ConnectUI connectUI;
 	GameLogic gameLogic;
 
@@ -47,21 +48,25 @@ public class Connection : MonoBehaviour
 
 	void SceneLoaded()
 	{
-		FindRefs();
+		int scene = SceneManager.GetActiveScene().buildIndex;
 
-		if (sfs != null)
-			AddSfsListeners();
-		
-		if (SceneManager.GetActiveScene().buildIndex == 1)	// game scene loaded
+		if (!SfsReady && scene != 0) SceneManager.LoadScene(0);
+		else
 		{
-			gameLogic.SetStartingTurn(sfs.MySelf.PlayerId);
-			gameLogic.UpdateTurn(false);
+			if (SfsReady) AddSfsListeners();
+			FindRefs();
 
-			// Tell extension that this client is ready to play
-			sfs.Send(new ExtensionRequest("ready", new SFSObject(), sfs.LastJoinedRoom));
+			if (scene == 1) // game scene loaded
+			{
+				gameLogic.SetStartingTurn(sfs.MySelf.PlayerId);
+				gameLogic.UpdateTurn(false);
+
+				// Tell extension that this client is ready to play
+				sfs.Send(new ExtensionRequest("ready", new SFSObject(), sfs.LastJoinedRoom));
+			}
+
+			print("loaded scene " + scene);
 		}
-
-		print("loaded scene " + SceneManager.GetActiveScene().buildIndex);
 	}
 
 	void FindRefs()
@@ -94,20 +99,23 @@ public class Connection : MonoBehaviour
 	void Update()
 	{
 		// As Unity is not thread safe, we process the queued up callbacks on every frame
-		if (sfs != null)
+		if (SfsReady)
 			sfs.ProcessEvents();
 	}
 
 	void OnApplicationQuit()
 	{
-		if (sfs != null)
+		if (SfsReady)
+		{
 			sfs.Disconnect();
+			print("Disconnected");
+		}
 	}
 
 	#region Helper methods
-	public bool Connect()
+	public bool Connect(string hostInput, string portInput, string nameInput)
 	{
-		if (sfs == null || !sfs.IsConnected) // CONNECT
+		if (!SfsReady || !sfs.IsConnected) // CONNECT
 		{
 			#if UNITY_WEBPLAYER
 			// Socket policy prefetch can be done if the client-server communication is not encrypted only (read link provided in the note above)
@@ -133,8 +141,8 @@ public class Connection : MonoBehaviour
 
 			// Set connection parameters
 			ConfigData cfg = new ConfigData();
-			cfg.Host = connectUI.hostInput.text;
-			cfg.Port = Convert.ToInt32(connectUI.portInput.text);
+			cfg.Host = hostInput;
+			cfg.Port = Convert.ToInt32(portInput);
 			cfg.Zone = ZONE;
 
 			// Connect to SFS2X
@@ -223,8 +231,8 @@ public class Connection : MonoBehaviour
 			print("Connection mode is: " + sfs.ConnectionMode);
 
 			// Login
-			sfs.Send(new LoginRequest(connectUI.nameInput.text));   // we need to be a user in order to talk to the server...
-			connectUI.button.interactable = false;
+			sfs.Send(new LoginRequest(connectUI.username));   // we need to be a user in order to talk to the server...
+			connectUI.SetButtonInteractable(false);
 		}
 		else
 		{
