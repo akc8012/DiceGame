@@ -47,27 +47,21 @@ public class Connection : MonoBehaviour
 
 	void SceneLoaded()
 	{
-		print("loaded scene " + SceneManager.GetActiveScene().buildIndex);
 		FindRefs();
 
-		if (SceneManager.GetActiveScene().buildIndex == 1)
+		if (sfs != null)
+			AddSfsListeners();
+		
+		if (SceneManager.GetActiveScene().buildIndex == 1)	// game scene loaded
 		{
-			sfs.AddEventListener(SFSEvent.CONNECTION, OnConnection);
-			sfs.AddEventListener(SFSEvent.CONNECTION_LOST, OnConnectionLost);
-			sfs.AddEventListener(SFSEvent.LOGIN, OnLogin);
-			sfs.AddEventListener(SFSEvent.LOGIN_ERROR, OnLoginError);
-			sfs.AddEventListener(SFSEvent.ROOM_JOIN, OnRoomJoin);
-			sfs.AddEventListener(SFSEvent.ROOM_JOIN_ERROR, OnRoomJoinError);
-			sfs.AddEventListener(SFSEvent.USER_ENTER_ROOM, OnUserEnterRoom);
-			sfs.AddEventListener(SFSEvent.USER_EXIT_ROOM, OnUserExitRoom);
-			sfs.AddEventListener(SFSEvent.EXTENSION_RESPONSE, OnExtensionResponse);
-
 			gameLogic.SetStartingTurn(sfs.MySelf.PlayerId);
 			gameLogic.UpdateTurn(false);
 
 			// Tell extension that this client is ready to play
 			sfs.Send(new ExtensionRequest("ready", new SFSObject(), sfs.LastJoinedRoom));
 		}
+
+		print("loaded scene " + SceneManager.GetActiveScene().buildIndex);
 	}
 
 	void FindRefs()
@@ -102,14 +96,12 @@ public class Connection : MonoBehaviour
 		// As Unity is not thread safe, we process the queued up callbacks on every frame
 		if (sfs != null)
 			sfs.ProcessEvents();
-
-		if (Input.GetKeyDown(KeyCode.Escape))
-			sfs.Disconnect();
 	}
 
 	void OnApplicationQuit()
 	{
-		sfs.Disconnect();
+		if (sfs != null)
+			sfs.Disconnect();
 	}
 
 	#region Helper methods
@@ -137,19 +129,7 @@ public class Connection : MonoBehaviour
 			// Set ThreadSafeMode explicitly, or Windows Store builds will get a wrong default value (false)
 			sfs.ThreadSafeMode = true;
 
-			sfs.AddEventListener(SFSEvent.CONNECTION, OnConnection);
-			sfs.AddEventListener(SFSEvent.CONNECTION_LOST, OnConnectionLost);
-			sfs.AddEventListener(SFSEvent.LOGIN, OnLogin);
-			sfs.AddEventListener(SFSEvent.LOGIN_ERROR, OnLoginError);
-			sfs.AddEventListener(SFSEvent.ROOM_JOIN, OnRoomJoin);
-			sfs.AddEventListener(SFSEvent.ROOM_JOIN_ERROR, OnRoomJoinError);
-			sfs.AddEventListener(SFSEvent.USER_ENTER_ROOM, OnUserEnterRoom);
-			sfs.AddEventListener(SFSEvent.USER_EXIT_ROOM, OnUserExitRoom);
-			sfs.AddEventListener(SFSEvent.EXTENSION_RESPONSE, OnExtensionResponse);
-
-			sfs.AddLogListener(LogLevel.INFO, OnInfoMessage);
-			sfs.AddLogListener(LogLevel.WARN, OnWarnMessage);
-			sfs.AddLogListener(LogLevel.ERROR, OnErrorMessage);
+			AddSfsListeners();
 
 			// Set connection parameters
 			ConfigData cfg = new ConfigData();
@@ -169,6 +149,25 @@ public class Connection : MonoBehaviour
 
 			return false;
 		}
+	}
+
+	void AddSfsListeners()
+	{
+		sfs.AddEventListener(SFSEvent.CONNECTION, OnConnection);
+		sfs.AddEventListener(SFSEvent.CONNECTION_LOST, OnConnectionLost);
+		sfs.AddEventListener(SFSEvent.LOGIN, OnLogin);
+		sfs.AddEventListener(SFSEvent.LOGIN_ERROR, OnLoginError);
+		sfs.AddEventListener(SFSEvent.ROOM_JOIN, OnRoomJoin);
+		sfs.AddEventListener(SFSEvent.ROOM_JOIN_ERROR, OnRoomJoinError);
+		sfs.AddEventListener(SFSEvent.USER_ENTER_ROOM, OnUserEnterRoom);
+		sfs.AddEventListener(SFSEvent.USER_EXIT_ROOM, OnUserExitRoom);
+		sfs.AddEventListener(SFSEvent.EXTENSION_RESPONSE, OnExtensionResponse);
+
+		sfs.AddLogListener(LogLevel.INFO, OnInfoMessage);
+		sfs.AddLogListener(LogLevel.WARN, OnWarnMessage);
+		sfs.AddLogListener(LogLevel.ERROR, OnErrorMessage);
+
+		print("added event listeners");
 	}
 
 	public void Reset()
