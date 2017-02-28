@@ -65,7 +65,8 @@ public class GameLogic : MonoBehaviour
 	public void SendRoll()
 	{
 		SFSObject obj = new SFSObject();
-		int randRoll = UnityEngine.Random.Range(0, 6);
+		int randRoll = die.GetRandomRoll();
+		print(randRoll);
 		obj.PutInt("roll", randRoll);
 
 		Connection.instance.Sfs.Send(new ExtensionRequest("sendRoll", obj, Connection.instance.Sfs.LastJoinedRoom));

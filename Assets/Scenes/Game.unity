@@ -551,6 +551,7 @@ MonoBehaviour:
   - {fileID: 21300006, guid: 780e13f652407f147a9124053e1aeacb, type: 3}
   - {fileID: 21300008, guid: 780e13f652407f147a9124053e1aeacb, type: 3}
   - {fileID: 21300010, guid: 780e13f652407f147a9124053e1aeacb, type: 3}
+  textAsset: {fileID: 4900000, guid: c0d411cb2e6f7b04a9529db6e598017a, type: 3}
 --- !u!1 &1546279071
 GameObject:
   m_ObjectHideFlags: 0

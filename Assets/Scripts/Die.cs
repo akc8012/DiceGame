@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,6 +7,7 @@ public class Die : MonoBehaviour
 {
 	[SerializeField] Sprite[] spriteSheet;
 	SpriteRenderer spriteRenderer;
+	LoadedDieInfo loadedDieInfo;
 
 	bool isRolling = false;
 	public bool CanRoll { get { return !isRolling; } }
@@ -23,18 +25,20 @@ public class Die : MonoBehaviour
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
 		rolls = new int[][] { roll1, roll2, roll3, roll4, roll5, roll6 };
+
+		loadedDieInfo = new LoadedDieInfo();
 	}
 
-	void Update()
+	public int GetRandomRoll()
 	{
-		/*InputNumbers();
+		int roll;
 
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			int randRoll = Random.Range(0, 6);
-			print((randRoll+1) + "!");
-			StartCoroutine(RollRoutine(rolls[randRoll]));
-		}*/
+		if (loadedDieInfo.IsPositive)
+			roll = UnityEngine.Random.Range(loadedDieInfo.LoadedNum, 6);
+		else
+			roll = UnityEngine.Random.Range(0, loadedDieInfo.LoadedNum+1);
+
+		return roll;
 	}
 
 	public void RollTheDie(int num)
