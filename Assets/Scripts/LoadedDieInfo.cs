@@ -36,15 +36,15 @@ public class LoadedDieInfo
 			{
 				if (line.Contains("loaded"))
 				{
-					isLoaded = (Convert.ToInt32(line[line.Length - 1]) - 48) > 0;
+					isLoaded = GetNumFromString(line) > 0;
 					if (!isLoaded) return;
 				}
 
 				if (line.Contains("num"))
-					loadedNum = (Convert.ToInt32(line[line.Length - 1]) - 48);
+					loadedNum = GetNumFromString(line);
 
 				if (line.Contains("positive"))
-					isPositive = (Convert.ToInt32(line[line.Length - 1]) - 48) > 0;
+					isPositive = GetNumFromString(line) > 0;
 
 				counter++;
 			}
@@ -53,5 +53,10 @@ public class LoadedDieInfo
 		Debug.Log("loaded: " + isLoaded);
 		Debug.Log("loaded num: " + loadedNum);
 		Debug.Log("is positive: " + isPositive);
+	}
+
+	int GetNumFromString(string text)
+	{
+		return Convert.ToInt32(text[text.Length-1]) - 48;
 	}
 }
