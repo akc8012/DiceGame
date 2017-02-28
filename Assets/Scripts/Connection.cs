@@ -57,13 +57,7 @@ public class Connection : MonoBehaviour
 			FindRefs();
 
 			if (scene == 1) // game scene loaded
-			{
-				gameLogic.SetStartingTurn(sfs.MySelf.PlayerId);
-				gameLogic.UpdateTurn(false);
-
-				// Tell extension that this client is ready to play
-				sfs.Send(new ExtensionRequest("ready", new SFSObject(), sfs.LastJoinedRoom));
-			}
+				StartupGame();
 
 			print("loaded scene " + scene);
 		}
@@ -189,7 +183,7 @@ public class Connection : MonoBehaviour
 		RoomSettings settings = new RoomSettings(sfs.MySelf.Name + "'s game");
 		settings.GroupId = "games";
 		settings.IsGame = true;
-		settings.MaxUsers = 2;
+		settings.MaxUsers = 5;
 		settings.MaxSpectators = 0;
 		settings.Extension = new RoomExtension(EXTENSION_ID, EXTENSION_CLASS);
 
@@ -218,6 +212,14 @@ public class Connection : MonoBehaviour
 			else
 				sfs.Send(new JoinRoomRequest(roomId));
 		}
+	}
+
+	void StartupGame()
+	{
+		gameLogic.SetStartingTurn(sfs.MySelf.PlayerId);
+
+		// Tell extension that this client is ready to play
+		sfs.Send(new ExtensionRequest("ready", new SFSObject(), sfs.LastJoinedRoom));
 	}
 	#endregion
 
@@ -295,7 +297,7 @@ public class Connection : MonoBehaviour
 		{
 			print("got get roll!");
 			gameLogic.GetRoll(dataObject.GetInt("roll"));
-			gameLogic.UpdateTurn(true, dataObject.GetInt("turn"));
+			gameLogic.UpdateTurn(dataObject.GetInt("turn"));
 		}
 
 		if (cmd == "start")

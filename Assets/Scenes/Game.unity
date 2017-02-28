@@ -238,6 +238,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnText: {fileID: 1913700214}
+  playerNumText: {fileID: 887530544}
 --- !u!1 &320593576
 GameObject:
   m_ObjectHideFlags: 0

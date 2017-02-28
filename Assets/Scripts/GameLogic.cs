@@ -13,7 +13,8 @@ using Sfs2X.Entities.Data;
 
 public class GameLogic : MonoBehaviour
 {
-	public Text turnText;
+	[SerializeField] Text turnText;
+	[SerializeField] Text playerNumText;
 	Die die;
 
 	int whoseTurn = -1;
@@ -35,7 +36,7 @@ public class GameLogic : MonoBehaviour
 			if (Connection.instance.Sfs.MySelf.PlayerId == whoseTurn)
 				turnText.text = "It's your turn!";
 			else
-				turnText.text = "Other user's turn";
+				turnText.text = "Player " + whoseTurn + "'s turn";
 
 			resetTurnText = true;
 		}
@@ -43,19 +44,22 @@ public class GameLogic : MonoBehaviour
 
 	public void SetStartingTurn(int playerId)
 	{
+		print("set starting turn player: " + playerId);
+
 		if (playerId == 1)
 		{
 			whoseTurn = 1;
 			turnText.text = "It's your turn!";
 		}
 		else
-			turnText.text = "Other user's turn";
+			turnText.text = "Player 1's turn";
+
+		playerNumText.text = Connection.instance.Sfs.MySelf.Name + ": player " + playerId;
 	}
 
-	public void UpdateTurn(bool toggleTurn, int lastTurn = -1)
+	public void UpdateTurn(int newTurn)
 	{
-		if (toggleTurn && lastTurn != -1)
-			whoseTurn = (lastTurn == 1) ? 2 : 1;
+		whoseTurn = newTurn;
 	}
 
 	public void SendRoll()
