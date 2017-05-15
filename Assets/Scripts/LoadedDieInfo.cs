@@ -7,11 +7,11 @@ using UnityEngine;
 public class LoadedDieInfo
 {
 	bool isLoaded = false;
-	public bool IsLoaded { get { return isLoaded; } }
-	int loadedNum = 0;
-	public int LoadedNum { get { return loadedNum; } }
-	bool isPositive = true;
-	public bool IsPositive { get { return isPositive; } }
+	int min;
+	int max;
+
+	const string minError = "Loaded die minimum number should not be less than 0.";
+	const string maxError = "Loaded die maximum number should not be greater than 6.";
 
 	public LoadedDieInfo()
 	{
@@ -21,8 +21,7 @@ public class LoadedDieInfo
 		}
 		catch (Exception e)
 		{
-			Debug.Log("The file could not be read:");
-			Debug.Log(e.Message);
+			Debug.LogError("The file could not be read: " + e.Message);
 		}
 	}
 
@@ -40,23 +39,40 @@ public class LoadedDieInfo
 					if (!isLoaded) return;
 				}
 
-				if (line.Contains("num"))
-					loadedNum = GetNumFromString(line);
+				if (line.Contains("range"))
+				{
+					int maxFromLine = Convert.ToInt32(line[line.Length-1]) - 48;
+					int minFromLine = Convert.ToInt32(line[line.Length-3]) - 48;
 
-				if (line.Contains("positive"))
-					isPositive = GetNumFromString(line) > 0;
+					if (maxFromLine > 6) throw new Exception(maxError);
+					if (minFromLine < 0) throw new Exception(minError);
+
+					max = maxFromLine;
+					min = minFromLine;
+				}
 
 				counter++;
 			}
 		}
 
 		Debug.Log("loaded: " + isLoaded);
-		Debug.Log("loaded num: " + loadedNum);
-		Debug.Log("is positive: " + isPositive);
+		Debug.Log("min: " + min + ", max: " + max);
 	}
 
 	int GetNumFromString(string text)
 	{
 		return Convert.ToInt32(text[text.Length-1]) - 48;
+	}
+
+	public int LoadedMin()
+	{
+		if (!isLoaded) return 0;
+		return min;
+	}
+
+	public int LoadedMax()
+	{
+		if (!isLoaded) return 6;
+		return max;
 	}
 }

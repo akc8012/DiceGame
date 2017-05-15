@@ -32,11 +32,7 @@ public class Die : MonoBehaviour
 	public int GetRandomRoll()
 	{
 		int roll;
-
-		if (loadedDieInfo.IsPositive)
-			roll = UnityEngine.Random.Range(loadedDieInfo.LoadedNum, 6);
-		else
-			roll = UnityEngine.Random.Range(0, loadedDieInfo.LoadedNum+1);
+		roll = UnityEngine.Random.Range(loadedDieInfo.LoadedMin(), loadedDieInfo.LoadedMax());
 
 		return roll;
 	}
