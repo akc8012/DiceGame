@@ -120,7 +120,7 @@ public class Connection : MonoBehaviour
 	}
 
 	#region Helper methods
-	public bool Connect(string hostInput, string portInput, string nameInput)
+	public bool Connect(string hostInput, string portInput)
 	{
 		if (!SfsReady || !sfs.IsConnected) // CONNECT
 		{
@@ -243,9 +243,7 @@ public class Connection : MonoBehaviour
 			print("SFS2X API version: " + sfs.Version);
 			print("Connection mode is: " + sfs.ConnectionMode);
 
-			// Login
-			sfs.Send(new LoginRequest(connectUI.username));   // we need to be a user in order to talk to the server...
-			connectUI.SetButtonInteractable(false);
+			// enable user to login here
 		}
 		else
 		{
@@ -254,6 +252,12 @@ public class Connection : MonoBehaviour
 			// Remove SFS2X listeners and re-enable interface
 			Reset();
 		}
+	}
+
+	public void Login(string username)
+	{
+		sfs.Send(new LoginRequest(username));   // we need to be a user in order to talk to the server...
+		connectUI.SetButtonInteractable(false);
 	}
 
 	void OnLogin(BaseEvent evt)

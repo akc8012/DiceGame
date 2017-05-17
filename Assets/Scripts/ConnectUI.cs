@@ -7,14 +7,14 @@ using UnityEngine.SceneManagement;
 
 public class ConnectUI : MonoBehaviour
 {
-	//GameLogic gameLogic;
+	[SerializeField] GameObject nameListUI;
 
 	[SerializeField] InputField hostInput;
 	[SerializeField] InputField portInput;
-	[SerializeField] InputField nameInput;
+	//[SerializeField] InputField nameInput;
 	[SerializeField] Button button;
 
-	public string username { get { return nameInput.text; } }
+	//public string username { get { return nameInput.text; } }
 
 	public void Awake()
 	{
@@ -31,7 +31,11 @@ public class ConnectUI : MonoBehaviour
 
 	public void OnButtonClick()
 	{
-		Connection.instance.Connect(hostInput.text, portInput.text, nameInput.text);
+		if (Connection.instance.Connect(hostInput.text, portInput.text))
+		{
+			nameListUI.SetActive(true);
+			gameObject.SetActive(false);
+		}
 	}
 
 	public void SetButtonInteractable(bool enable)
