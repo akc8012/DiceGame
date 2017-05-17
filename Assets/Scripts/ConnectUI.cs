@@ -33,8 +33,8 @@ public class ConnectUI : MonoBehaviour
 	{
 		if (Connection.instance.Connect(hostInput.text, portInput.text))
 		{
-			nameListUI.SetActive(true);
-			gameObject.SetActive(false);
+			nameListUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+			GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1500);
 		}
 	}
 
