@@ -30,6 +30,7 @@ public class Connection : MonoBehaviour
 	public SmartFox Sfs { get { return sfs; } }
 	public bool SfsReady { get { return sfs != null; } }
 	ConnectUI connectUI;
+	LobbyUI lobbyUI;
 	GameLogic gameLogic;
 
 	public static Connection instance = null;
@@ -53,10 +54,15 @@ public class Connection : MonoBehaviour
 		if (!SfsReady && scene != 0) SceneManager.LoadScene(0);
 		else
 		{
-			if (SfsReady) AddSfsListeners();
+			if (SfsReady)
+				AddSfsListeners();
+
 			FindRefs();
 
-			if (scene == 1) // game scene loaded
+			if (lobbyUI != null)    // lobby scene loaded
+				lobbyUI.PopulateUserList(sfs.LastJoinedRoom.UserList);
+
+			if (gameLogic != null) // game scene loaded
 				StartupGame();
 
 			print("loaded scene " + scene);
@@ -81,12 +87,19 @@ public class Connection : MonoBehaviour
 
 		if (gameLogic == null)
 		{
-			GameObject gam = GameObject.Find("GameLogic");
-			if (gam != null)
+			GameObject game = GameObject.Find("GameLogic");
+			if (game != null)
 			{
 				print("found game logic!");
-				gameLogic = gam.GetComponent<GameLogic>();
+				gameLogic = game.GetComponent<GameLogic>();
 			}
+		}
+
+		if (lobbyUI == null)
+		{
+			GameObject lobby = GameObject.Find("LobbyUI");
+			if (lobby != null)
+				lobbyUI = lobby.GetComponent<LobbyUI>();
 		}
 	}
 
@@ -178,20 +191,7 @@ public class Connection : MonoBehaviour
 		sfs.RemoveAllEventListeners();
 	}
 
-	void CreateRoom()
-	{
-		RoomSettings settings = new RoomSettings(sfs.MySelf.Name + "'s game");
-		settings.GroupId = "games";
-		settings.IsGame = true;
-		settings.MaxUsers = 5;
-		settings.MaxSpectators = 0;
-		settings.Extension = new RoomExtension(EXTENSION_ID, EXTENSION_CLASS);
-
-		// Request Game Room creation to server
-		sfs.Send(new CreateRoomRequest(settings, true, sfs.LastJoinedRoom));
-	}
-
-	void HandleRoomJoin()
+	public void HandleGameRoomJoin()
 	{
 		// create room, otherwise: join existing
 		if (sfs.RoomList.Count > 0)
@@ -207,11 +207,22 @@ public class Connection : MonoBehaviour
 				break;
 			}
 
-			if (roomId == -1)
-				CreateRoom();
-			else
-				sfs.Send(new JoinRoomRequest(roomId));
+			if (roomId == -1) CreateGameRoom();
+			else sfs.Send(new JoinRoomRequest(roomId));
 		}
+	}
+
+	void CreateGameRoom()
+	{
+		RoomSettings settings = new RoomSettings(sfs.MySelf.Name + "'s game");
+		settings.GroupId = "games";
+		settings.IsGame = true;
+		settings.MaxUsers = 5;
+		settings.MaxSpectators = 0;
+		settings.Extension = new RoomExtension(EXTENSION_ID, EXTENSION_CLASS);
+
+		// Request Game Room creation to server
+		sfs.Send(new CreateRoomRequest(settings, true, sfs.LastJoinedRoom));
 	}
 
 	void StartupGame()
@@ -252,7 +263,11 @@ public class Connection : MonoBehaviour
 		// Show system message
 		print("Logged in as: '" + user.Name + "'");
 
-		HandleRoomJoin();
+		// Join first Room in Zone (The Lobby)
+		if (sfs.RoomList.Count > 0)
+			sfs.Send(new JoinRoomRequest(sfs.RoomList[0].Name));
+
+		//HandleGameRoomJoin();
 	}
 
 	void OnRoomJoin(BaseEvent evt)
@@ -263,7 +278,7 @@ public class Connection : MonoBehaviour
 		print("You joined room '" + room.Name + "'");
 
 		Reset();
-		SceneManager.LoadScene(1);
+		SceneManager.LoadScene(room.Name.Contains("game") ? 2 : 1);
 	}
 
 	void OnUserEnterRoom(BaseEvent evt)
@@ -272,6 +287,8 @@ public class Connection : MonoBehaviour
 
 		// Show system message
 		print("User " + user.Name + " entered the room");
+
+		if (lobbyUI) lobbyUI.PopulateUserList(sfs.LastJoinedRoom.UserList);
 	}
 
 	void OnUserExitRoom(BaseEvent evt)
@@ -285,6 +302,8 @@ public class Connection : MonoBehaviour
 			// Show system message
 			print("User " + user.Name + " left the room");
 		}
+
+		if (lobbyUI) lobbyUI.PopulateUserList(sfs.LastJoinedRoom.UserList);
 	}
 
 	// Handle responses from server side Extension.

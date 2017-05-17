@@ -18,7 +18,7 @@ public class ConnectUI : MonoBehaviour
 
 	public void Awake()
 	{
-		//gameLogic = GameObject.Find("GameLogic").GetComponent<GameLogic>();
+		
 	}
 	
 	public void Init(string defaultHost, int defaultPort)
@@ -26,6 +26,7 @@ public class ConnectUI : MonoBehaviour
 		hostInput.text = defaultHost;
 		portInput.text = defaultPort.ToString();
 		button.interactable = true;
+		button.onClick.AddListener(OnButtonClick);
 	}
 
 	public void OnButtonClick()
