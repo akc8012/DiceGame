@@ -7,14 +7,14 @@ using UnityEngine.SceneManagement;
 
 public class ConnectUI : MonoBehaviour
 {
-	[SerializeField] GameObject nameListUI;
+	[SerializeField] GameObject tempConnectUI;
+	[SerializeField] GameObject enterNameUI;
 
 	[SerializeField] InputField hostInput;
 	[SerializeField] InputField portInput;
-	//[SerializeField] InputField nameInput;
-	[SerializeField] Button button;
-
-	//public string username { get { return nameInput.text; } }
+	[SerializeField] InputField nameInput;
+	[SerializeField] Button connectButton;
+	[SerializeField] Button loginButton;
 
 	public void Awake()
 	{
@@ -25,21 +25,32 @@ public class ConnectUI : MonoBehaviour
 	{
 		hostInput.text = defaultHost;
 		portInput.text = defaultPort.ToString();
-		button.interactable = true;
-		button.onClick.AddListener(OnButtonClick);
+
+		connectButton.interactable = true;
+		connectButton.onClick.AddListener(OnConnectButtonClick);
+
+		loginButton.interactable = false;
+		loginButton.onClick.AddListener(OnLoginButtonClicked);
 	}
 
-	public void OnButtonClick()
+	void OnConnectButtonClick()
 	{
 		if (Connection.instance.Connect(hostInput.text, portInput.text))
 		{
-			nameListUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-			GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1500);
+			enterNameUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+			tempConnectUI.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1500);
+
+			loginButton.interactable = true;
 		}
 	}
 
-	public void SetButtonInteractable(bool enable)
+	void OnLoginButtonClicked()
 	{
-		button.interactable = enable;
+		Connection.instance.Login(nameInput.text);
+	}
+
+	public void SetLoginButtonInteractable(bool enable)
+	{
+		loginButton.interactable = enable;
 	}
 }

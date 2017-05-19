@@ -31,7 +31,6 @@ public class Connection : MonoBehaviour
 	public bool SfsReady { get { return sfs != null; } }
 	ConnectUI connectUI;
 	LobbyUI lobbyUI;
-	NameListUI nameListUI;
 	GameLogic gameLogic;
 
 	public static Connection instance = null;
@@ -101,13 +100,6 @@ public class Connection : MonoBehaviour
 			GameObject lobby = GameObject.Find("LobbyUI");
 			if (lobby != null)
 				lobbyUI = lobby.GetComponent<LobbyUI>();
-		}
-
-		if (nameListUI == null)
-		{
-			GameObject nameList = GameObject.Find("NameListUI");
-			if (nameList != null)
-				nameListUI = nameList.GetComponent<NameListUI>();
 		}
 	}
 
@@ -265,7 +257,7 @@ public class Connection : MonoBehaviour
 	public void Login(string username)
 	{
 		sfs.Send(new LoginRequest(username));   // we need to be a user in order to talk to the server...
-		connectUI.SetButtonInteractable(false);
+		connectUI.SetLoginButtonInteractable(false);
 	}
 
 	void OnLogin(BaseEvent evt)
@@ -301,7 +293,6 @@ public class Connection : MonoBehaviour
 		print("User " + user.Name + " entered the room");
 
 		if (lobbyUI) lobbyUI.PopulateUserList(sfs.LastJoinedRoom.UserList);
-		//if (nameListUI) nameListUI.UpdateJoinedMembersList(sfs.LastJoinedRoom.UserList);
 	}
 
 	void OnUserExitRoom(BaseEvent evt)
@@ -317,7 +308,6 @@ public class Connection : MonoBehaviour
 		}
 
 		if (lobbyUI) lobbyUI.PopulateUserList(sfs.LastJoinedRoom.UserList);
-		//if (nameListUI) nameListUI.UpdateJoinedMembersList(sfs.LastJoinedRoom.UserList);
 	}
 
 	// Handle responses from server side Extension.

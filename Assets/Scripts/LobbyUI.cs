@@ -2,16 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using Sfs2X.Entities;	// User
 
 public class LobbyUI : MonoBehaviour
 {
 	[SerializeField] Button joinButton;
 	[SerializeField] Text userList;
-	[SerializeField] Text waitingList;
-
-	NameListInfo nameListInfo;
 
 	void Start()
 	{
@@ -38,34 +34,5 @@ public class LobbyUI : MonoBehaviour
 		{
 			userList.text += userNames[i] + "\n";
 		}
-
-		PopulateWaitingList(userNames);
-	}
-
-	void PopulateWaitingList(List<string> userNames)
-	{
-		nameListInfo = new NameListInfo();
-		List<string> names = nameListInfo.GetNames;
-
-		waitingList.text = "";
-		for (int i = 0; i < names.Count; i++)
-		{
-			if (!InJoinedList(userNames, names[i]) && 
-			(names[i] != Connection.instance.Sfs.MySelf.Name))
-				waitingList.text += names[i] + "\n";
-		}
-	}
-
-	bool InJoinedList(List<string> userNames, string user)
-	{
-		if (user.Contains("(You)")) return true;
-
-		for (int i = 0; i < userNames.Count; i++)
-		{
-			if (string.Compare(user, userNames[i]) == 0)
-				return true;
-		}
-
-		return false;
 	}
 }
