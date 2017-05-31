@@ -192,7 +192,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4984877542615398, guid: 97139b91f3d4aab4a9936531d9867c12, type: 2}
       propertyPath: m_RootOrder
-      value: 12
+      value: 11
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 97139b91f3d4aab4a9936531d9867c12, type: 2}
@@ -207,7 +207,7 @@ GameObject:
   - component: {fileID: 226452018}
   - component: {fileID: 226452017}
   m_Layer: 0
-  m_Name: ChipDrawBox (2)
+  m_Name: ChipDrawBoxC
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -266,7 +266,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &253324232
 MonoBehaviour:
@@ -281,6 +281,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   turnText: {fileID: 1913700214}
   playerNumText: {fileID: 887530544}
+  chipDrawBoxes:
+  - {fileID: 436796310}
+  - {fileID: 1433645315}
+  - {fileID: 226452017}
+  - {fileID: 886745624}
+  - {fileID: 513096101}
 --- !u!1 &320593576
 GameObject:
   m_ObjectHideFlags: 0
@@ -378,7 +384,7 @@ GameObject:
   - component: {fileID: 436796311}
   - component: {fileID: 436796310}
   m_Layer: 0
-  m_Name: ChipDrawBox (0)
+  m_Name: ChipDrawBoxA
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -420,7 +426,7 @@ GameObject:
   - component: {fileID: 513096102}
   - component: {fileID: 513096101}
   m_Layer: 0
-  m_Name: ChipDrawBox (4)
+  m_Name: ChipDrawBoxE
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -462,7 +468,7 @@ GameObject:
   - component: {fileID: 886745625}
   - component: {fileID: 886745624}
   m_Layer: 0
-  m_Name: ChipDrawBox (5)
+  m_Name: ChipDrawBoxD
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -492,7 +498,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &887530542
 GameObject:
@@ -729,7 +735,7 @@ GameObject:
   - component: {fileID: 1433645316}
   - component: {fileID: 1433645315}
   m_Layer: 0
-  m_Name: ChipDrawBox (1)
+  m_Name: ChipDrawBoxB
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -849,7 +855,7 @@ RectTransform:
   - {fileID: 1913700213}
   - {fileID: 887530543}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -916,7 +922,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1913700212
 GameObject:
@@ -992,45 +998,3 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1913700212}
---- !u!1 &1933339482
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1933339484}
-  - component: {fileID: 1933339483}
-  m_Layer: 0
-  m_Name: ChipDrawBox (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1933339483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1933339482}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29e486e16142716488e42229b7918fed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chip: {fileID: 1853252353691924, guid: ea146791230f5aa4fb18cb17a7d08df5, type: 2}
-  startingChips: 0
---- !u!4 &1933339484
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1933339482}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.73, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

@@ -8,6 +8,9 @@ public class ChipDrawBox : MonoBehaviour
 
 	[SerializeField] int startingChips = 0;
 
+	int amountOfChips;
+	public int GetAmountOfChips { get { return amountOfChips; } }
+
 	const int amountOfCols = 8;
 	const float offset = 0.75f;
 
@@ -18,6 +21,7 @@ public class ChipDrawBox : MonoBehaviour
 
 	public void SetChipsToDraw(int amount)
 	{
+		amountOfChips = amount;
 		foreach (Transform child in transform)
 		{
 			Destroy(child.gameObject);
