@@ -6,33 +6,50 @@ using Sfs2X.Entities;	// User
 
 public class LobbyUI : MonoBehaviour
 {
-	[SerializeField] Button joinButton;
+	[SerializeField] Button readyButton;
+	[SerializeField] Text userName;
 	[SerializeField] Text userList;
+	[SerializeField] Text waitingForText;
 
-	void Start()
+	bool isReady = false;
+
+	void Awake()
 	{
-		joinButton.onClick.AddListener(JoinButtonClicked);
+		readyButton.onClick.AddListener(ReadyButtonClicked);
 	}
 
-	void JoinButtonClicked()
+	void ReadyButtonClicked()
 	{
 		Connection.instance.HandleGameRoomJoin();
 	}
 
+	void SetUserName()
+	{
+		userName.text = Connection.instance.Sfs.MySelf.Name + (isReady ? " (Ready)" : "");
+	}
+
+	void SetWaitingForText(int num)
+	{
+		if (num != 0)
+			waitingForText.text = "Waiting for " + num + " more players...";
+		else
+			waitingForText.text = "Ready to play!";
+	}
+
 	public void PopulateUserList(List<User> users)
 	{
-		List<string> userNames = new List<string>();
-
-		foreach (User user in users)
-		{
-			bool isSelf = (user == Connection.instance.Sfs.MySelf);
-			userNames.Add(user.Name + (isSelf ? " (You)" : ""));
-		}
+		SetUserName();
 
 		userList.text = "";
-		for (int i = 0; i < userNames.Count; i++)
+		for (int i = 0; i < users.Count; i++)
 		{
-			userList.text += userNames[i] + "\n";
+			if (users[i] == Connection.instance.Sfs.MySelf)
+				continue;
+
+			userList.text += users[i].Name;
+			userList.text += "\n";
 		}
+
+		SetWaitingForText(Connection.instance.MaxUsers - users.Count);
 	}
 }

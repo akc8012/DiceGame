@@ -33,6 +33,9 @@ public class Connection : MonoBehaviour
 	LobbyUI lobbyUI;
 	GameLogic gameLogic;
 
+	const int maxUsers = 5;
+	public int MaxUsers { get { return maxUsers; } }
+
 	public static Connection instance = null;
 
 	void Awake()
@@ -217,7 +220,7 @@ public class Connection : MonoBehaviour
 		RoomSettings settings = new RoomSettings(sfs.MySelf.Name + "'s game");
 		settings.GroupId = "games";
 		settings.IsGame = true;
-		settings.MaxUsers = 5;
+		settings.MaxUsers = maxUsers;
 		settings.MaxSpectators = 0;
 		settings.Extension = new RoomExtension(EXTENSION_ID, EXTENSION_CLASS);
 
@@ -243,7 +246,7 @@ public class Connection : MonoBehaviour
 			print("SFS2X API version: " + sfs.Version);
 			print("Connection mode is: " + sfs.ConnectionMode);
 
-			// enable user to login here
+			connectUI.EnableLogin();
 		}
 		else
 		{

@@ -35,13 +35,15 @@ public class ConnectUI : MonoBehaviour
 
 	void OnConnectButtonClick()
 	{
-		if (Connection.instance.Connect(hostInput.text, portInput.text))
-		{
-			enterNameUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-			tempConnectUI.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1500);
+		Connection.instance.Connect(hostInput.text, portInput.text);
+	}
 
-			loginButton.interactable = true;
-		}
+	public void EnableLogin()
+	{
+		enterNameUI.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
+		tempConnectUI.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, -1500);
+
+		loginButton.interactable = true;
 	}
 
 	void OnLoginButtonClicked()
