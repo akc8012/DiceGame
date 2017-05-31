@@ -27,6 +27,10 @@ public class Die : MonoBehaviour
 		rolls = new int[][] { roll1, roll2, roll3, roll4, roll5, roll6 };
 
 		loadedDieInfo = new LoadedDieInfo();
+
+		transform.position = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 10));
+		transform.position += Vector3.one * 1.25f;
+
 	}
 
 	public int GetRandomRoll()
