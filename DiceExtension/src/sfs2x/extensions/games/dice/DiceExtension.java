@@ -18,6 +18,7 @@ public class DiceExtension extends SFSExtension
 	{	
 		this.addRequestHandler("ready", ReadyHandler.class);
 		this.addRequestHandler("sendRoll", RollHandler.class);
+		this.addRequestHandler("sendChipData", ChipHandler.class);
 	}
 	
 	Room getGameRoom()

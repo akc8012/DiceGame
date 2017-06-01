@@ -67,15 +67,17 @@ public class GameLogic : MonoBehaviour
 
 	public void SendRoll()
 	{
-		SFSObject obj = new SFSObject();
+		SFSObject rollObj = new SFSObject();
 		int randRoll = die.GetRandomRoll();
-		randRoll = 3;	// DELET THIS
-		//print(randRoll);
-		obj.PutInt("roll", randRoll);
+		rollObj.PutInt("roll", randRoll);
 
 		SetChipStuff(randRoll);
+		int[] chipData = GetChipData();
+		SFSObject chipObj = new SFSObject();
+		chipObj.PutIntArray("data", chipData);
 
-		Connection.instance.Sfs.Send(new ExtensionRequest("sendRoll", obj, Connection.instance.Sfs.LastJoinedRoom));
+		Connection.instance.Sfs.Send(new ExtensionRequest("sendRoll", rollObj, Connection.instance.Sfs.LastJoinedRoom));
+		Connection.instance.Sfs.Send(new ExtensionRequest("sendChipData", chipObj, Connection.instance.Sfs.LastJoinedRoom));
 	}
 
 	public void GetRoll(int roll)
@@ -93,12 +95,32 @@ public class GameLogic : MonoBehaviour
 
 		if (amountOfChips <= 0) return;
 
-		chipDrawBoxes[playerId].SetChipsToDraw(amountOfChips - roll);
+		chipDrawBoxes[playerId].SetChipsToDraw(amountOfChips-roll < 0 ? 0 : amountOfChips-roll);
 
 		if (roll > amountOfChips)
 			roll = amountOfChips;
 
 		amountOfChips = chipDrawBoxes[playerId+1].GetAmountOfChips;
 		chipDrawBoxes[playerId+1].SetChipsToDraw(amountOfChips + roll);
+	}
+
+	int[] GetChipData()
+	{
+		int[] chipData = new int[chipDrawBoxes.Length];
+
+		for (int i = 0; i < chipDrawBoxes.Length; i++)
+		{
+			chipData[i] = chipDrawBoxes[i].GetAmountOfChips;
+		}
+
+		return chipData;
+	}
+
+	public void SetAllBoxesBasedOnData(int[] chipData)
+	{
+		for (int i = 0; i < chipData.Length; i++)
+		{
+			chipDrawBoxes[i].SetChipsToDraw(chipData[i]);
+		}
 	}
 }
