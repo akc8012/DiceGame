@@ -71,7 +71,7 @@ public class GameLogic : MonoBehaviour
 		int randRoll = die.GetRandomRoll();
 		rollObj.PutInt("roll", randRoll);
 
-		SetChipStuff(randRoll);
+		SetChipStuff(randRoll+1);
 		int[] chipData = GetChipData();
 		SFSObject chipObj = new SFSObject();
 		chipObj.PutIntArray("data", chipData);
