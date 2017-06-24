@@ -12,38 +12,39 @@ public class Die : MonoBehaviour
 	bool isRolling = false;
 	public bool CanRoll { get { return !isRolling; } }
 
-	int[] roll1 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 0 };
-	int[] roll2 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 1 };
-	int[] roll3 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 2 };
-	int[] roll4 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 3 };
-	int[] roll5 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 4 };
-	int[] roll6 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 5 };
+	int[] roll0 = new int[20] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };	// shouldn't roll this
+	int[] roll1 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 1 };
+	int[] roll2 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 2 };
+	int[] roll3 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 3 };
+	int[] roll4 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 4 };
+	int[] roll5 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 5 };
+	int[] roll6 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 6 };
 
 	int[][] rolls;
 
 	void Start()
 	{
 		spriteRenderer = GetComponent<SpriteRenderer>();
-		rolls = new int[][] { roll1, roll2, roll3, roll4, roll5, roll6 };
+		rolls = new int[][] { roll0, roll1, roll2, roll3, roll4, roll5, roll6 };
 
 		loadedDieInfo = new LoadedDieInfo();
 
 		transform.position = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 10));
 		transform.position += Vector3.one * 1.25f;
-
 	}
 
 	public int GetRandomRoll()
 	{
 		int roll;
-		roll = UnityEngine.Random.Range(loadedDieInfo.LoadedMin(), loadedDieInfo.LoadedMax());
+		// add one to max due to exclusive
+		roll = UnityEngine.Random.Range(loadedDieInfo.LoadedMin(), loadedDieInfo.LoadedMax() + 1);
 
 		return roll;
 	}
 
 	public void RollTheDie(int num)
 	{
-		print((num + 1) + "!");
+		print((num) + "!");
 		StartCoroutine(RollRoutine(rolls[num]));
 	}
 

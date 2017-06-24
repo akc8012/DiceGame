@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 780e13f652407f147a9124053e1aeacb
-timeCreated: 1486942343
+timeCreated: 1498328966
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -10,6 +10,7 @@ TextureImporter:
     21300006: DiceSheet_4
     21300008: DiceSheet_5
     21300010: DiceSheet_6
+    21300012: DiceSheet_0
   serializedVersion: 4
   mipmaps:
     mipMapMode: 0
@@ -153,6 +154,19 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 2560
+        y: 0
+        width: 512
+        height: 512
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: DiceSheet_0
+      rect:
+        serializedVersion: 2
+        x: 0
         y: 0
         width: 512
         height: 512

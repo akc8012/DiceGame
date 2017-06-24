@@ -690,7 +690,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 780e13f652407f147a9124053e1aeacb, type: 3}
+  m_Sprite: {fileID: 21300012, guid: 780e13f652407f147a9124053e1aeacb, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -719,6 +719,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteSheet:
+  - {fileID: 21300012, guid: 780e13f652407f147a9124053e1aeacb, type: 3}
   - {fileID: 21300000, guid: 780e13f652407f147a9124053e1aeacb, type: 3}
   - {fileID: 21300002, guid: 780e13f652407f147a9124053e1aeacb, type: 3}
   - {fileID: 21300004, guid: 780e13f652407f147a9124053e1aeacb, type: 3}

@@ -25,7 +25,7 @@ public class RollHandler extends BaseClientRequestHandler
 			
 			trace("roll: " + roll +" turn: " + player.getPlayerId());
 			
-			gameExt.send("getRoll", rtn, gameExt.getGameRoom().getUserList());
+			gameExt.send("recieveRoll", rtn, gameExt.getGameRoom().getUserList());
 		}
 	}
 

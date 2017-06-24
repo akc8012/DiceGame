@@ -7,10 +7,11 @@ using UnityEngine;
 public class LoadedDieInfo
 {
 	bool isLoaded = false;
-	int min;
-	int max;
+	int min, max;
+	const int rollMin = 1;
+	const int rollMax = 6;
 
-	const string minError = "Loaded die minimum number should not be less than 0.";
+	const string minError = "Loaded die minimum number should not be less than 1.";
 	const string maxError = "Loaded die maximum number should not be greater than 6.";
 
 	public LoadedDieInfo()
@@ -44,8 +45,8 @@ public class LoadedDieInfo
 					int maxFromLine = Convert.ToInt32(line[line.Length-1]) - 48;
 					int minFromLine = Convert.ToInt32(line[line.Length-3]) - 48;
 
-					if (maxFromLine > 6) throw new Exception(maxError);
-					if (minFromLine < 0) throw new Exception(minError);
+					if (maxFromLine > rollMax) throw new Exception(maxError);
+					if (minFromLine < rollMin) throw new Exception(minError);
 
 					max = maxFromLine;
 					min = minFromLine;
@@ -66,13 +67,13 @@ public class LoadedDieInfo
 
 	public int LoadedMin()
 	{
-		if (!isLoaded) return 0;
+		if (!isLoaded) return rollMin;
 		return min;
 	}
 
 	public int LoadedMax()
 	{
-		if (!isLoaded) return 6;
+		if (!isLoaded) return rollMax;
 		return max;
 	}
 }

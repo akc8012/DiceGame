@@ -326,10 +326,10 @@ public class Connection : MonoBehaviour
 		string cmd = (string)evt.Params["cmd"];
 		SFSObject dataObject = (SFSObject)evt.Params["params"];
 
-		if (cmd == "getRoll")
+		if (cmd == "recieveRoll")
 		{
-			print("got get roll!");
-			gameLogic.GetRoll(dataObject.GetInt("roll"));
+			print("recieved roll!");
+			gameLogic.RecieveRoll(dataObject.GetInt("roll"));
 			gameLogic.UpdateTurn(dataObject.GetInt("turn"));
 		}
 

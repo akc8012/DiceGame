@@ -71,7 +71,7 @@ public class GameLogic : MonoBehaviour
 		int randRoll = die.GetRandomRoll();
 		rollObj.PutInt("roll", randRoll);
 
-		SetChipStuff(randRoll+1);
+		SetChipStuff(randRoll);
 		int[] chipData = GetChipData();
 		SFSObject chipObj = new SFSObject();
 		chipObj.PutIntArray("data", chipData);
@@ -80,9 +80,9 @@ public class GameLogic : MonoBehaviour
 		Connection.instance.Sfs.Send(new ExtensionRequest("sendChipData", chipObj, Connection.instance.Sfs.LastJoinedRoom));
 	}
 
-	public void GetRoll(int roll)
+	public void RecieveRoll(int roll)
 	{
-		print("got roll: " + roll);
+		print("recieved roll: " + roll);
 		turnText.text = "Rolling...";
 		resetTurnText = false;
 		die.RollTheDie(roll);
