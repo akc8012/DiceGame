@@ -12,6 +12,9 @@ public class Die : MonoBehaviour
 	bool isRolling = false;
 	public bool CanRoll { get { return !isRolling; } }
 
+	public delegate void RollAction();
+	public event RollAction DoneRoll;
+
 	int[] roll0 = new int[20] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };	// shouldn't roll this
 	int[] roll1 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 1 };
 	int[] roll2 = new int[20] { 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 2, 1, 2 };
@@ -89,6 +92,9 @@ public class Die : MonoBehaviour
 		}
 
 		isRolling = false;
+
+		if (DoneRoll != null)
+			DoneRoll();
 	}
 
 }

@@ -37,6 +37,9 @@ public class Connection : MonoBehaviour
 	int? maxPlayers = null;
 	public int MaxPlayers { get { return maxPlayers != null ? (int)maxPlayers : -1; } }
 
+	bool gameStarted = false;
+	public bool GameStarted { get { return gameStarted; } }
+
 	public static Connection instance = null;
 
 	void Awake()
@@ -341,7 +344,7 @@ public class Connection : MonoBehaviour
 
 		if (cmd == "start")
 		{
-			print("ext started successfully");
+			gameStarted = true;
 		}
 	}
 	#endregion

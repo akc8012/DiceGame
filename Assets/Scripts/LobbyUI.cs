@@ -16,6 +16,7 @@ public class LobbyUI : MonoBehaviour
 	void Awake()
 	{
 		readyButton.onClick.AddListener(ReadyButtonClicked);
+		readyButton.interactable = false;
 	}
 
 	void ReadyButtonClicked()
@@ -50,6 +51,9 @@ public class LobbyUI : MonoBehaviour
 			userList.text += "\n";
 		}
 
-		SetWaitingForText(Connection.instance.MaxPlayers - users.Count);
+		int neededUsers = Connection.instance.MaxPlayers - users.Count;
+		SetWaitingForText(neededUsers);
+		if (neededUsers <= 0)
+			readyButton.interactable = true;
 	}
 }

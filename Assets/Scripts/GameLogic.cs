@@ -21,27 +21,20 @@ public class GameLogic : MonoBehaviour
 
 	int whoseTurn = -1;
 	public bool IsMyTurn { get { return Connection.instance.Sfs.MySelf.PlayerId == whoseTurn; } }
-	bool resetTurnText = true;
 
 	void Start()
 	{
 		die = GameObject.Find("Die").GetComponent<Die>();
+		die.DoneRoll += FinishRoll;
 	}
 
 	void Update()
 	{
+		if (!Connection.instance.GameStarted)
+			return;
+
 		if (IsMyTurn && die.CanRoll && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)))
 			SendRoll();
-
-		if (die.CanRoll && !resetTurnText)
-		{
-			if (Connection.instance.Sfs.MySelf.PlayerId == whoseTurn)
-				turnText.text = "It's your turn!";
-			else
-				turnText.text = "Player " + whoseTurn + "'s turn";
-
-			resetTurnText = true;
-		}
 	}
 
 	public void SetStartingTurn(int playerId)
@@ -84,8 +77,15 @@ public class GameLogic : MonoBehaviour
 	{
 		print("recieved roll: " + roll);
 		turnText.text = "Rolling...";
-		resetTurnText = false;
 		die.RollTheDie(roll);
+	}
+
+	void FinishRoll()
+	{
+		if (Connection.instance.Sfs.MySelf.PlayerId == whoseTurn)
+			turnText.text = "It's your turn!";
+		else
+			turnText.text = "Player " + whoseTurn + "'s turn";
 	}
 
 	void SetChipStuff(int roll)
