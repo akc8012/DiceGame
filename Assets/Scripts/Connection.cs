@@ -344,7 +344,7 @@ public class Connection : MonoBehaviour
 
 		if (cmd == "start")
 		{
-			gameStarted = true;
+			gameStarted = true;	// make sure other stuff can't happen before we start
 		}
 	}
 	#endregion
