@@ -21,6 +21,7 @@ public class GameLogic : MonoBehaviour
 
 	int whoseTurn = -1;
 	public bool IsMyTurn { get { return Connection.instance.Sfs.MySelf.PlayerId == whoseTurn; } }
+	bool sendChipMove = false;
 
 	void Start()
 	{
@@ -64,13 +65,8 @@ public class GameLogic : MonoBehaviour
 		int randRoll = die.GetRandomRoll();
 		rollObj.PutInt("roll", randRoll);
 
-		SetChipStuff(randRoll);
-		int[] chipData = GetChipData();
-		SFSObject chipObj = new SFSObject();
-		chipObj.PutIntArray("data", chipData);
-
 		Connection.instance.Sfs.Send(new ExtensionRequest("sendRoll", rollObj, Connection.instance.Sfs.LastJoinedRoom));
-		Connection.instance.Sfs.Send(new ExtensionRequest("sendChipData", chipObj, Connection.instance.Sfs.LastJoinedRoom));
+		sendChipMove = true;
 	}
 
 	public void RecieveRoll(int roll)
@@ -80,40 +76,33 @@ public class GameLogic : MonoBehaviour
 		die.RollTheDie(roll);
 	}
 
-	void FinishRoll()
+	void FinishRoll(int roll)
 	{
 		if (Connection.instance.Sfs.MySelf.PlayerId == whoseTurn)
 			turnText.text = "It's your turn!";
 		else
 			turnText.text = "Player " + whoseTurn + "'s turn";
+
+		if (sendChipMove)
+			SendChipMove(roll);	
 	}
 
-	void SetChipStuff(int roll)
+	void SendChipMove(int roll)
 	{
-		int playerId = Connection.instance.Sfs.MySelf.PlayerId - 1;
-		int amountOfChips = chipDrawBoxes[playerId].GetAmountOfChips;
+		SFSObject chipObj = new SFSObject();
+		chipObj.PutInt("amount", roll);
 
-		if (amountOfChips <= 0) return;
+		int self = Connection.instance.Sfs.MySelf.PlayerId - 1;
+		int next = self + 1;
 
-		chipDrawBoxes[playerId].SetChipsToDraw(amountOfChips-roll < 0 ? 0 : amountOfChips-roll);
+		//if (next > Connection.instance.MaxPlayers)
+		//	next = 0;
 
-		if (roll > amountOfChips)
-			roll = amountOfChips;
+		chipObj.PutInt("from", self);
+		chipObj.PutInt("to", next);
 
-		amountOfChips = chipDrawBoxes[playerId+1].GetAmountOfChips;
-		chipDrawBoxes[playerId+1].SetChipsToDraw(amountOfChips + roll);
-	}
-
-	int[] GetChipData()
-	{
-		int[] chipData = new int[chipDrawBoxes.Length];
-
-		for (int i = 0; i < chipDrawBoxes.Length; i++)
-		{
-			chipData[i] = chipDrawBoxes[i].GetAmountOfChips;
-		}
-
-		return chipData;
+		Connection.instance.Sfs.Send(new ExtensionRequest("sendChipMove", chipObj, Connection.instance.Sfs.LastJoinedRoom));
+		sendChipMove = false;
 	}
 
 	public void SetAllBoxesBasedOnData(int[] chipData)

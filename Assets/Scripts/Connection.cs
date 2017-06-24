@@ -336,10 +336,10 @@ public class Connection : MonoBehaviour
 			gameLogic.UpdateTurn(dataObject.GetInt("turn"));
 		}
 
-		if (cmd == "getChipData")
+		if (cmd == "recieveChipList")
 		{
-			print("got chip data");
-			gameLogic.SetAllBoxesBasedOnData(dataObject.GetIntArray("data"));
+			print("recieved chip list");
+			gameLogic.SetAllBoxesBasedOnData(dataObject.GetIntArray("chipList"));
 		}
 
 		if (cmd == "start")

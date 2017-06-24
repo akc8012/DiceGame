@@ -12,7 +12,7 @@ public class Die : MonoBehaviour
 	bool isRolling = false;
 	public bool CanRoll { get { return !isRolling; } }
 
-	public delegate void RollAction();
+	public delegate void RollAction(int roll);
 	public event RollAction DoneRoll;
 
 	int[] roll0 = new int[20] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };	// shouldn't roll this
@@ -48,31 +48,31 @@ public class Die : MonoBehaviour
 	public void RollTheDie(int num)
 	{
 		print((num) + "!");
-		StartCoroutine(RollRoutine(rolls[num]));
+		StartCoroutine(RollRoutine(num));
 	}
 
 	void InputNumbers()
 	{
 		if (Input.GetKeyDown(KeyCode.Alpha1) && !isRolling)
-			StartCoroutine(RollRoutine(roll1));
+			StartCoroutine(RollRoutine(1));
 
 		if (Input.GetKeyDown(KeyCode.Alpha2) && !isRolling)
-			StartCoroutine(RollRoutine(roll2));
+			StartCoroutine(RollRoutine(2));
 
 		if (Input.GetKeyDown(KeyCode.Alpha3) && !isRolling)
-			StartCoroutine(RollRoutine(roll3));
+			StartCoroutine(RollRoutine(3));
 
 		if (Input.GetKeyDown(KeyCode.Alpha4) && !isRolling)
-			StartCoroutine(RollRoutine(roll4));
+			StartCoroutine(RollRoutine(4));
 
 		if (Input.GetKeyDown(KeyCode.Alpha5) && !isRolling)
-			StartCoroutine(RollRoutine(roll5));
+			StartCoroutine(RollRoutine(5));
 
 		if (Input.GetKeyDown(KeyCode.Alpha6) && !isRolling)
-			StartCoroutine(RollRoutine(roll6));
+			StartCoroutine(RollRoutine(6));
 	}
 
-	IEnumerator RollRoutine(int[] roll)
+	IEnumerator RollRoutine(int ndx)
 	{
 		isRolling = true;
 
@@ -84,7 +84,7 @@ public class Die : MonoBehaviour
 
 		while (frames < 20)
 		{
-			spriteRenderer.sprite = spriteSheet[roll[frames]];
+			spriteRenderer.sprite = spriteSheet[rolls[ndx][frames]];
 			speed += (frames <= framesBeforeInc) ? 0 : incSpeed;
 			frames++;
 			
@@ -94,7 +94,7 @@ public class Die : MonoBehaviour
 		isRolling = false;
 
 		if (DoneRoll != null)
-			DoneRoll();
+			DoneRoll(ndx);
 	}
 
 }
