@@ -65,7 +65,7 @@ public class GameLogic : MonoBehaviour
 		whoseTurn = newTurn;
 	}
 
-	public void SendRoll()
+	void SendRoll()
 	{
 		SFSObject rollObj = new SFSObject();
 		int randRoll = die.GetRandomRoll();

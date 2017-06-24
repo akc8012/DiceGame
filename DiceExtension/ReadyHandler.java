@@ -14,8 +14,15 @@ public class ReadyHandler extends BaseClientRequestHandler
 		if (user.isPlayer())
 		{
 			trace("ready handler called");
-			// Checks if five players are available and start game
-			if (gameExt.getGameRoom().getSize().getUserCount() == 5)
+			
+			if (gameExt.getMaxPlayers() == null)
+			{
+				int numOfPlayers = params.getInt("num");
+				gameExt.setMaxPlayers(numOfPlayers);
+			}
+			
+			// Checks if all players are available and starts the game
+			if (gameExt.canStartGame())
 				gameExt.startGame();
 		}
 		

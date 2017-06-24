@@ -10,7 +10,7 @@ import com.smartfoxserver.v2.extensions.SFSExtension;
 public class DiceExtension extends SFSExtension
 {
 	private User whoseTurn;
-	private final int maxPlayers = 5;
+	private Integer maxPlayers = null;
 	private volatile boolean gameStarted;
 	
 	@Override
@@ -19,6 +19,21 @@ public class DiceExtension extends SFSExtension
 		this.addRequestHandler("ready", ReadyHandler.class);
 		this.addRequestHandler("sendRoll", RollHandler.class);
 		this.addRequestHandler("sendChipData", ChipHandler.class);
+	}
+	
+	Integer getMaxPlayers()
+	{
+		return maxPlayers;
+	}
+	
+	void setMaxPlayers(int players)
+	{
+		maxPlayers = players;
+	}
+	
+	boolean canStartGame()
+	{
+		return this.getGameRoom().getSize().getUserCount() == maxPlayers;
 	}
 	
 	Room getGameRoom()

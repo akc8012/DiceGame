@@ -33,8 +33,9 @@ public class Connection : MonoBehaviour
 	LobbyUI lobbyUI;
 	GameLogic gameLogic;
 
-	const int maxUsers = 5;
-	public int MaxUsers { get { return maxUsers; } }
+	const int totalMaxPlayers = 5;		// keep hardcoded to the REAL max
+	int? maxPlayers = null;
+	public int MaxPlayers { get { return maxPlayers != null ? (int)maxPlayers : -1; } }
 
 	public static Connection instance = null;
 
@@ -123,7 +124,7 @@ public class Connection : MonoBehaviour
 	}
 
 	#region Helper methods
-	public bool Connect(string hostInput, string portInput)
+	public bool Connect(string hostInput, string portInput, int maxPlayers)
 	{
 		if (!SfsReady || !sfs.IsConnected) // CONNECT
 		{
@@ -154,6 +155,9 @@ public class Connection : MonoBehaviour
 			cfg.Host = hostInput;
 			cfg.Port = Convert.ToInt32(portInput);
 			cfg.Zone = ZONE;
+
+			if (this.maxPlayers == null)
+				this.maxPlayers = maxPlayers;
 
 			// Connect to SFS2X
 			sfs.Connect(cfg);
@@ -220,7 +224,7 @@ public class Connection : MonoBehaviour
 		RoomSettings settings = new RoomSettings(sfs.MySelf.Name + "'s game");
 		settings.GroupId = "games";
 		settings.IsGame = true;
-		settings.MaxUsers = maxUsers;
+		settings.MaxUsers = totalMaxPlayers;
 		settings.MaxSpectators = 0;
 		settings.Extension = new RoomExtension(EXTENSION_ID, EXTENSION_CLASS);
 
@@ -232,8 +236,11 @@ public class Connection : MonoBehaviour
 	{
 		gameLogic.SetStartingTurn(sfs.MySelf.PlayerId);
 
+		SFSObject numOfPlayers = new SFSObject();
+		numOfPlayers.PutInt("num", MaxPlayers);
+
 		// Tell extension that this client is ready to play
-		sfs.Send(new ExtensionRequest("ready", new SFSObject(), sfs.LastJoinedRoom));
+		sfs.Send(new ExtensionRequest("ready", numOfPlayers, sfs.LastJoinedRoom));
 	}
 	#endregion
 

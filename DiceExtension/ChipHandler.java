@@ -11,7 +11,7 @@ public class ChipHandler extends BaseClientRequestHandler
 	@Override
 	public void handleClientRequest(User user, ISFSObject params)
 	{
-		DiceExtension parentExt = (DiceExtension)getParentExtension();
+		DiceExtension gameExt = (DiceExtension)getParentExtension();
 		
 		Collection<Integer> chipData = params.getIntArray("data");
 		
@@ -20,6 +20,6 @@ public class ChipHandler extends BaseClientRequestHandler
 		
 		trace("sending chip data");
 		
-		parentExt.send("getChipData", rtn, parentExt.getGameRoom().getUserList());
+		gameExt.send("getChipData", rtn, gameExt.getGameRoom().getUserList());
 	}
 }

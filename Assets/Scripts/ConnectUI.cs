@@ -12,13 +12,14 @@ public class ConnectUI : MonoBehaviour
 
 	[SerializeField] InputField hostInput;
 	[SerializeField] InputField portInput;
+	[SerializeField] InputField playersInput;
 	[SerializeField] InputField nameInput;
 	[SerializeField] Button connectButton;
 	[SerializeField] Button loginButton;
 
 	public void Awake()
 	{
-		
+		playersInput.text = "5";
 	}
 	
 	public void Init(string defaultHost, int defaultPort)
@@ -35,7 +36,7 @@ public class ConnectUI : MonoBehaviour
 
 	void OnConnectButtonClick()
 	{
-		Connection.instance.Connect(hostInput.text, portInput.text);
+		Connection.instance.Connect(hostInput.text, portInput.text, Convert.ToInt32(playersInput.text));
 	}
 
 	public void EnableLogin()

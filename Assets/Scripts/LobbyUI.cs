@@ -50,6 +50,6 @@ public class LobbyUI : MonoBehaviour
 			userList.text += "\n";
 		}
 
-		SetWaitingForText(Connection.instance.MaxUsers - users.Count);
+		SetWaitingForText(Connection.instance.MaxPlayers - users.Count);
 	}
 }

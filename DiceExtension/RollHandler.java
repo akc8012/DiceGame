@@ -10,14 +10,14 @@ public class RollHandler extends BaseClientRequestHandler
 	@Override
 	public void handleClientRequest(User player, ISFSObject params)
 	{
-		DiceExtension parentExt = (DiceExtension)getParentExtension();
+		DiceExtension gameExt = (DiceExtension)getParentExtension();
 		
 		trace("player with id: " + player.getPlayerId() + " got to the roll thing");
 		
-		if (parentExt.getWhoseTurn() == player)
+		if (gameExt.getWhoseTurn() == player)
 		{
 			int roll = params.getInt("roll");
-			int newTurn = parentExt.updateTurn();
+			int newTurn = gameExt.updateTurn();
 			
 			ISFSObject rtn = new SFSObject();
 			rtn.putInt("roll", roll);
@@ -25,7 +25,7 @@ public class RollHandler extends BaseClientRequestHandler
 			
 			trace("roll: " + roll +" turn: " + player.getPlayerId());
 			
-			parentExt.send("getRoll", rtn, parentExt.getGameRoom().getUserList());
+			gameExt.send("getRoll", rtn, gameExt.getGameRoom().getUserList());
 		}
 	}
 
