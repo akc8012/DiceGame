@@ -13,8 +13,6 @@ public class DiceExtension extends SFSExtension
 	private Integer maxPlayers = null;
 	private volatile boolean gameStarted;
 	
-	public int[] chips = { 40, 0, 0, 0, 0 };
-	
 	@Override
 	public void init()
 	{	
