@@ -27,6 +27,8 @@ public class GameLogic : MonoBehaviour
 	{
 		die = GameObject.Find("Die").GetComponent<Die>();
 		die.DoneRoll += FinishRoll;
+
+		Connection.instance.StartupGame();
 	}
 
 	void Update()
@@ -54,8 +56,12 @@ public class GameLogic : MonoBehaviour
 		playerNumText.text = Connection.instance.Sfs.MySelf.Name + ": player " + playerId;
 	}
 
-	public void UpdateTurn(int newTurn)
+	public void RecieveRoll(int roll, int newTurn)
 	{
+		print("recieved roll: " + roll);
+		turnText.text = "Rolling...";
+		die.RollTheDie(roll);
+
 		whoseTurn = newTurn;
 	}
 
@@ -67,13 +73,6 @@ public class GameLogic : MonoBehaviour
 
 		Connection.instance.Sfs.Send(new ExtensionRequest("sendRoll", rollObj, Connection.instance.Sfs.LastJoinedRoom));
 		sendChipMove = true;
-	}
-
-	public void RecieveRoll(int roll)
-	{
-		print("recieved roll: " + roll);
-		turnText.text = "Rolling...";
-		die.RollTheDie(roll);
 	}
 
 	void FinishRoll(int roll)

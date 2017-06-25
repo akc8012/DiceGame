@@ -66,12 +66,6 @@ public class Connection : MonoBehaviour
 
 			FindRefs();
 
-			if (lobbyUI != null)    // lobby scene loaded
-				lobbyUI.PopulateUserList(sfs.LastJoinedRoom.UserList);
-
-			if (gameLogic != null) // game scene loaded
-				StartupGame();
-
 			print("loaded scene " + scene);
 		}
 	}
@@ -96,10 +90,7 @@ public class Connection : MonoBehaviour
 		{
 			GameObject game = GameObject.Find("GameLogic");
 			if (game != null)
-			{
-				print("found game logic!");
 				gameLogic = game.GetComponent<GameLogic>();
-			}
 		}
 
 		if (lobbyUI == null)
@@ -186,6 +177,7 @@ public class Connection : MonoBehaviour
 		sfs.AddEventListener(SFSEvent.ROOM_JOIN_ERROR, OnRoomJoinError);
 		sfs.AddEventListener(SFSEvent.USER_ENTER_ROOM, OnUserEnterRoom);
 		sfs.AddEventListener(SFSEvent.USER_EXIT_ROOM, OnUserExitRoom);
+		sfs.AddEventListener(SFSEvent.PUBLIC_MESSAGE, OnPublicMessage);
 		sfs.AddEventListener(SFSEvent.EXTENSION_RESPONSE, OnExtensionResponse);
 
 		sfs.AddLogListener(LogLevel.INFO, OnInfoMessage);
@@ -204,22 +196,23 @@ public class Connection : MonoBehaviour
 	public void HandleGameRoomJoin()
 	{
 		// create room, otherwise: join existing
-		if (sfs.RoomList.Count > 0)
+
+		if (sfs.RoomList.Count <= 0) return;
+
+		int roomId = -1;
+
+		for (int i = 0; i < sfs.RoomList.Count; i++)
 		{
-			int roomId = -1;
+			if (!sfs.RoomList[i].IsGame || sfs.RoomList[i].IsHidden || sfs.RoomList[i].IsPasswordProtected)
+				continue;
 
-			for (int i = 0; i < sfs.RoomList.Count; i++)
-			{
-				if (!sfs.RoomList[i].IsGame || sfs.RoomList[i].IsHidden || sfs.RoomList[i].IsPasswordProtected)
-					continue;
-
-				roomId = sfs.RoomList[i].Id;
-				break;
-			}
-
-			if (roomId == -1) CreateGameRoom();
-			else sfs.Send(new JoinRoomRequest(roomId));
+			roomId = sfs.RoomList[i].Id;
+			break;
 		}
+
+		sfs.Send(new PublicMessageRequest("playerReady"));
+		if (roomId == -1) CreateGameRoom();
+		else sfs.Send(new JoinRoomRequest(roomId));
 	}
 
 	void CreateGameRoom()
@@ -235,7 +228,7 @@ public class Connection : MonoBehaviour
 		sfs.Send(new CreateRoomRequest(settings, true, sfs.LastJoinedRoom));
 	}
 
-	void StartupGame()
+	public void StartupGame()
 	{
 		gameLogic.SetStartingTurn(sfs.MySelf.PlayerId);
 
@@ -283,8 +276,6 @@ public class Connection : MonoBehaviour
 		// Join first Room in Zone (The Lobby)
 		if (sfs.RoomList.Count > 0)
 			sfs.Send(new JoinRoomRequest(sfs.RoomList[0].Name));
-
-		//HandleGameRoomJoin();
 	}
 
 	void OnRoomJoin(BaseEvent evt)
@@ -295,7 +286,7 @@ public class Connection : MonoBehaviour
 		print("You joined room '" + room.Name + "'");
 
 		Reset();
-		SceneManager.LoadScene(room.Name.Contains("game") ? 2 : 1);
+		SceneManager.LoadScene(room.IsGame ? 2 : 1);
 	}
 
 	void OnUserEnterRoom(BaseEvent evt)
@@ -314,13 +305,22 @@ public class Connection : MonoBehaviour
 
 		if (user != sfs.MySelf)
 		{
-			Room room = (Room)evt.Params["room"];
-
 			// Show system message
 			print("User " + user.Name + " left the room");
 		}
 
 		if (lobbyUI) lobbyUI.PopulateUserList(sfs.LastJoinedRoom.UserList);
+	}
+
+	private void OnPublicMessage(BaseEvent evt)
+	{
+		User sender = (User)evt.Params["sender"];
+		string message = (string)evt.Params["message"];
+
+		if (message == "playerReady" && !sender.IsItMe)
+		{
+			if (lobbyUI) lobbyUI.AddToReadyList(sender.Name);
+		}
 	}
 
 	// Handle responses from server side Extension.
@@ -332,8 +332,7 @@ public class Connection : MonoBehaviour
 		if (cmd == "recieveRoll")
 		{
 			print("recieved roll!");
-			gameLogic.RecieveRoll(dataObject.GetInt("roll"));
-			gameLogic.UpdateTurn(dataObject.GetInt("turn"));
+			gameLogic.RecieveRoll(dataObject.GetInt("roll"), dataObject.GetInt("turn"));
 		}
 
 		if (cmd == "recieveChipList")

@@ -10,23 +10,25 @@ public class LobbyUI : MonoBehaviour
 	[SerializeField] Text userName;
 	[SerializeField] Text userList;
 	[SerializeField] Text waitingForText;
-
-	bool isReady = false;
+	
+	List<string> readyList;
 
 	void Awake()
 	{
 		readyButton.onClick.AddListener(ReadyButtonClicked);
 		readyButton.interactable = false;
+		readyList = new List<string>();
+	}
+
+	void Start()
+	{
+		userName.text = Connection.instance.Sfs.MySelf.Name;
+		PopulateUserList(Connection.instance.Sfs.LastJoinedRoom.UserList);
 	}
 
 	void ReadyButtonClicked()
 	{
 		Connection.instance.HandleGameRoomJoin();
-	}
-
-	void SetUserName()
-	{
-		userName.text = Connection.instance.Sfs.MySelf.Name + (isReady ? " (Ready)" : "");
 	}
 
 	void SetWaitingForText(int num)
@@ -39,9 +41,14 @@ public class LobbyUI : MonoBehaviour
 
 	public void PopulateUserList(List<User> users)
 	{
-		SetUserName();
-
 		userList.text = "";
+
+		for (int i = 0; i < readyList.Count; i++)
+		{
+			userList.text += readyList[i] + " (Ready)";
+			userList.text += "\n";
+		}
+
 		for (int i = 0; i < users.Count; i++)
 		{
 			if (users[i] == Connection.instance.Sfs.MySelf)
@@ -51,9 +58,14 @@ public class LobbyUI : MonoBehaviour
 			userList.text += "\n";
 		}
 
-		int neededUsers = Connection.instance.MaxPlayers - users.Count;
+		int neededUsers = Connection.instance.MaxPlayers - (users.Count + readyList.Count);
 		SetWaitingForText(neededUsers);
 		if (neededUsers <= 0)
 			readyButton.interactable = true;
+	}
+
+	public void AddToReadyList(string name)
+	{
+		readyList.Add(name);
 	}
 }

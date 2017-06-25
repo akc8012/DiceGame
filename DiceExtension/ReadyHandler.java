@@ -13,7 +13,7 @@ public class ReadyHandler extends BaseClientRequestHandler
 		
 		if (user.isPlayer())
 		{
-			trace("ready handler called");
+			trace("ready handler called by: " + user.getName());
 			
 			if (gameExt.getMaxPlayers() == null)
 			{
