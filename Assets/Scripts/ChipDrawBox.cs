@@ -1,10 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ChipDrawBox : MonoBehaviour
 {
 	[SerializeField] int startingChips = 0;
+	[SerializeField] Text numText;
 
 	GameObject[] chips;
 	int amountOfChips;
@@ -29,11 +31,15 @@ public class ChipDrawBox : MonoBehaviour
 
 		for (int i = 0; i < amount; i++)
 			chips[i].SetActive(true);
+
+		if (numText) numText.text = amountOfChips.ToString();
 	}
 
 	public void ClearChips()
 	{
 		for (int i = 0; i < chips.Length; i++)
 			chips[i].SetActive(false);
+
+		if (numText) numText.text = "0";
 	}
 }
