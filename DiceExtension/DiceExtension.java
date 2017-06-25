@@ -43,10 +43,10 @@ public class DiceExtension extends SFSExtension
 	
 	int updateTurn()
 	{
-		int newTurn = whoseTurn.getPlayerId() + 1;
+		int newTurn = whoseTurn.getPlayerId() - 1;
 		
-		if (newTurn > maxPlayers)
-			newTurn = 1;
+		if (newTurn < 1)
+			newTurn = maxPlayers;
 		
 		whoseTurn = getParentRoom().getUserByPlayerId(newTurn);
 		return newTurn;
@@ -66,24 +66,24 @@ public class DiceExtension extends SFSExtension
 		
 		gameStarted = true;
 		
-		User player1 = getParentRoom().getUserByPlayerId(1);
-		//User player2 = getParentRoom().getUserByPlayerId(2);
+		User lastPlayer = getParentRoom().getUserByPlayerId(maxPlayers);
 		
-		// No turn assigned? Let's start with player 1
+		// No turn assigned? Start with the last player
 		if (whoseTurn == null)
-			whoseTurn = player1;
+			whoseTurn = lastPlayer;
 		
 		trace("whose turn: " + whoseTurn.getPlayerId());
 		
 		// Send START event to client
 		ISFSObject resObj = new SFSObject();
 		resObj.putInt("t", whoseTurn.getPlayerId());
-		//resObj.putUtfString("p1n", player1.getName());
-		//resObj.putInt("p1i", player1.getId());
-		//resObj.putUtfString("p2n", player2.getName());
-		//resObj.putInt("p2i", player2.getId());
 		
 		send("start", resObj, getGameRoom().getUserList());
 	}
 
 }
+
+
+
+
+

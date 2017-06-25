@@ -43,13 +43,13 @@ public class GameLogic : MonoBehaviour
 		print("set starting turn player: " + playerId);
 		print(playerId);
 
-		if (playerId == 1)
+		if (playerId == Connection.instance.MaxPlayers)
 		{
-			whoseTurn = 1;
+			whoseTurn = Connection.instance.MaxPlayers;
 			turnText.text = "It's your turn!";
 		}
 		else
-			turnText.text = "Player 1's turn";
+			turnText.text = "Player " + Connection.instance.MaxPlayers + "'s turn";
 
 		playerNumText.text = Connection.instance.Sfs.MySelf.Name + ": player " + playerId;
 	}
