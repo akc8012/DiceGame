@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class ChipController
 {
 	private static ChipController instance = null;
-	private int[] chips = { 40, 0, 0, 0, 0 };
+	private int[] chips = { 40, 0, 0, 0, 0, 0 };
 
 	protected ChipController()
 	{
@@ -22,12 +22,13 @@ public class ChipController
 	
 	public void initChips(int amountOfChips)
 	{
-		chips = new int[5];
+		chips = new int[6];
 		chips[0] = amountOfChips;
 		chips[1] = 0;
 		chips[2] = 0;
 		chips[3] = 0;
 		chips[4] = 0;
+		chips[5] = 0;
 	}
 	
 	public void moveChips(int amount, int from, int to)

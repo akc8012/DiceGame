@@ -92,14 +92,11 @@ public class GameLogic : MonoBehaviour
 		SFSObject chipObj = new SFSObject();
 		chipObj.PutInt("amount", roll);
 
-		int self = Connection.instance.Sfs.MySelf.PlayerId - 1;
-		int next = self + 1;
+		int last = Connection.instance.Sfs.MySelf.PlayerId - 1;
+		int self = last + 1;
 
-		//if (next > Connection.instance.MaxPlayers)
-		//	next = 0;
-
-		chipObj.PutInt("from", self);
-		chipObj.PutInt("to", next);
+		chipObj.PutInt("from", last);
+		chipObj.PutInt("to", self);
 
 		Connection.instance.Sfs.Send(new ExtensionRequest("sendChipMove", chipObj, Connection.instance.Sfs.LastJoinedRoom));
 		sendChipMove = false;
