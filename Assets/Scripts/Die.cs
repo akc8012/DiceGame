@@ -2,11 +2,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Die : MonoBehaviour
 {
 	[SerializeField] Sprite[] spriteSheet;
-	SpriteRenderer spriteRenderer;
+	
+	Image image;
 	LoadedDieInfo loadedDieInfo;
 
 	bool isRolling = false;
@@ -27,13 +29,10 @@ public class Die : MonoBehaviour
 
 	void Start()
 	{
-		spriteRenderer = GetComponent<SpriteRenderer>();
+		image = GetComponent<Image>();
 		rolls = new int[][] { roll0, roll1, roll2, roll3, roll4, roll5, roll6 };
 
 		loadedDieInfo = new LoadedDieInfo();
-
-		transform.position = Camera.main.ScreenToWorldPoint(new Vector3(0, 0, 10));
-		transform.position += Vector3.one * 1.25f;
 	}
 
 	public int GetRandomRoll()
@@ -84,7 +83,7 @@ public class Die : MonoBehaviour
 
 		while (frames < 20)
 		{
-			spriteRenderer.sprite = spriteSheet[rolls[ndx][frames]];
+			image.sprite = spriteSheet[rolls[ndx][frames]];
 			speed += (frames <= framesBeforeInc) ? 0 : incSpeed;
 			frames++;
 			
