@@ -24,6 +24,7 @@ public class RollHandler extends BaseClientRequestHandler
 			rtn.putInt("turn", newTurn);
 			
 			trace("roll: " + roll +" turn: " + player.getPlayerId());
+			trace(gameExt.getWhoseTurn().getPlayerId() == params.getInt("secondPlayerId"));
 			
 			gameExt.send("recieveRoll", rtn, gameExt.getGameRoom().getUserList());
 		}

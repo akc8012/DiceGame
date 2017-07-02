@@ -11,6 +11,7 @@ public class DiceExtension extends SFSExtension
 {
 	private User whoseTurn;
 	private Integer maxPlayers = null;
+	private int additionalPlayers = 0;
 	private volatile boolean gameStarted;
 	
 	@Override
@@ -31,9 +32,11 @@ public class DiceExtension extends SFSExtension
 		maxPlayers = players;
 	}
 	
+	void setAdditionalPlayer() { additionalPlayers++; }
+	
 	boolean canStartGame()
 	{
-		return this.getGameRoom().getSize().getUserCount() == maxPlayers;
+		return this.getGameRoom().getSize().getUserCount() + additionalPlayers == maxPlayers;
 	}
 	
 	Room getGameRoom()
@@ -47,6 +50,8 @@ public class DiceExtension extends SFSExtension
 		
 		if (newTurn < 1)
 			newTurn = maxPlayers;
+		
+		trace("update turn: " + newTurn);
 		
 		whoseTurn = getParentRoom().getUserByPlayerId(newTurn);
 		return newTurn;
@@ -66,7 +71,7 @@ public class DiceExtension extends SFSExtension
 		
 		gameStarted = true;
 		
-		User lastPlayer = getParentRoom().getUserByPlayerId(maxPlayers);
+		User lastPlayer = getParentRoom().getUserByPlayerId(maxPlayers - additionalPlayers);
 		
 		// No turn assigned? Start with the last player
 		if (whoseTurn == null)

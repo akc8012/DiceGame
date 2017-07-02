@@ -19,14 +19,35 @@ public class GameLogic : MonoBehaviour
 
 	Die die;
 
+	int playerId = -1;
+	int? secondPlayerId;
 	int whoseTurn = -1;
-	public bool IsMyTurn { get { return Connection.instance.Sfs.MySelf.PlayerId == whoseTurn; } }
+
+	public bool IsMyTurn
+	{
+		get
+		{
+			if (secondPlayerId != null)
+				return playerId == whoseTurn || secondPlayerId == whoseTurn;
+
+			return playerId == whoseTurn;
+		}
+	}
+
+
 	bool sendChipMove = false;
 
 	void Start()
 	{
 		die = GameObject.Find("Die").GetComponent<Die>();
 		die.DoneRoll += FinishRoll;
+		playerId = Connection.instance.Sfs.MySelf.PlayerId;
+
+		if (Application.isEditor)
+		{
+			secondPlayerId = playerId + 1;
+			print("SET SECONDARY ID: " + secondPlayerId);
+		}
 
 		Connection.instance.StartupGame();
 	}
@@ -40,18 +61,15 @@ public class GameLogic : MonoBehaviour
 			SendRoll();
 	}
 
-	public void SetStartingTurn(int playerId)
+	public void SetStartingTurn()
 	{
 		print("set starting turn player: " + playerId);
-		print(playerId);
+		whoseTurn = Connection.instance.MaxPlayers;
 
-		if (playerId == Connection.instance.MaxPlayers)
-		{
-			whoseTurn = Connection.instance.MaxPlayers;
+		if (IsMyTurn)
 			turnText.text = "It's your turn!";
-		}
 		else
-			turnText.text = "Player " + Connection.instance.MaxPlayers + "'s turn";
+			turnText.text = "Player " + whoseTurn + "'s turn";
 
 		playerNumText.text = Connection.instance.Sfs.MySelf.Name + ": player " + playerId;
 	}
@@ -70,6 +88,7 @@ public class GameLogic : MonoBehaviour
 		SFSObject rollObj = new SFSObject();
 		int randRoll = die.GetRandomRoll();
 		rollObj.PutInt("roll", randRoll);
+		rollObj.PutInt("secondPlayerId", (secondPlayerId != null) ? (int)secondPlayerId : -1);
 
 		Connection.instance.Sfs.Send(new ExtensionRequest("sendRoll", rollObj, Connection.instance.Sfs.LastJoinedRoom));
 		sendChipMove = true;
@@ -77,7 +96,7 @@ public class GameLogic : MonoBehaviour
 
 	void FinishRoll(int roll)
 	{
-		if (Connection.instance.Sfs.MySelf.PlayerId == whoseTurn)
+		if (IsMyTurn)
 			turnText.text = "It's your turn!";
 		else
 			turnText.text = "Player " + whoseTurn + "'s turn";
@@ -91,7 +110,7 @@ public class GameLogic : MonoBehaviour
 		SFSObject chipObj = new SFSObject();
 		chipObj.PutInt("amount", roll);
 
-		int last = Connection.instance.Sfs.MySelf.PlayerId - 1;
+		int last = playerId - 1;
 		int self = last + 1;
 
 		chipObj.PutInt("from", last);

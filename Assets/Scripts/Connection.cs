@@ -230,13 +230,14 @@ public class Connection : MonoBehaviour
 
 	public void StartupGame()
 	{
-		gameLogic.SetStartingTurn(sfs.MySelf.PlayerId);
+		gameLogic.SetStartingTurn();
 
-		SFSObject numOfPlayers = new SFSObject();
-		numOfPlayers.PutInt("num", MaxPlayers);
+		SFSObject obj = new SFSObject();
+		obj.PutInt("maxPlayers", MaxPlayers);
+		obj.PutBool("additional", Application.isEditor);
 
 		// Tell extension that this client is ready to play
-		sfs.Send(new ExtensionRequest("ready", numOfPlayers, sfs.LastJoinedRoom));
+		sfs.Send(new ExtensionRequest("ready", obj, sfs.LastJoinedRoom));
 	}
 	#endregion
 
