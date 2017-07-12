@@ -16,7 +16,7 @@ public class LobbyUI : MonoBehaviour
 	void Awake()
 	{
 		readyButton.onClick.AddListener(ReadyButtonClicked);
-		//readyButton.interactable = false;
+		readyButton.interactable = false;
 		readyList = new List<string>();
 	}
 

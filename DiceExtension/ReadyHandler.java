@@ -17,12 +17,9 @@ public class ReadyHandler extends BaseClientRequestHandler
 			
 			if (gameExt.getMaxPlayers() == null)
 			{
-				int numOfPlayers = params.getInt("maxPlayers");
+				int numOfPlayers = params.getInt("num");
 				gameExt.setMaxPlayers(numOfPlayers);
 			}
-			
-			boolean additionalPlayer = params.getBool("additional");
-			if (additionalPlayer) gameExt.setAdditionalPlayer();
 			
 			// Checks if all players are available and starts the game
 			if (gameExt.canStartGame())

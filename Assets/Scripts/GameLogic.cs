@@ -19,22 +19,9 @@ public class GameLogic : MonoBehaviour
 
 	Die die;
 
-	int playerId = -1;
-	int? secondPlayerId;
 	int whoseTurn = -1;
-
-	public bool IsMyTurn
-	{
-		get
-		{
-			if (secondPlayerId != null)
-				return playerId == whoseTurn || secondPlayerId == whoseTurn;
-
-			return playerId == whoseTurn;
-		}
-	}
-
-
+	int playerId = -1;
+	public bool IsMyTurn { get { return Connection.instance.Sfs.MySelf.PlayerId == whoseTurn; } }
 	bool sendChipMove = false;
 
 	void Start()
@@ -42,12 +29,6 @@ public class GameLogic : MonoBehaviour
 		die = GameObject.Find("Die").GetComponent<Die>();
 		die.DoneRoll += FinishRoll;
 		playerId = Connection.instance.Sfs.MySelf.PlayerId;
-
-		if (Application.isEditor)
-		{
-			secondPlayerId = playerId + 1;
-			print("SET SECONDARY ID: " + secondPlayerId);
-		}
 
 		Connection.instance.StartupGame();
 	}
@@ -88,7 +69,6 @@ public class GameLogic : MonoBehaviour
 		SFSObject rollObj = new SFSObject();
 		int randRoll = die.GetRandomRoll();
 		rollObj.PutInt("roll", randRoll);
-		rollObj.PutInt("secondPlayerId", (secondPlayerId != null) ? (int)secondPlayerId : -1);
 
 		Connection.instance.Sfs.Send(new ExtensionRequest("sendRoll", rollObj, Connection.instance.Sfs.LastJoinedRoom));
 		sendChipMove = true;
